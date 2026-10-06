@@ -129,41 +129,48 @@
   });
 
   /* ---- Formulario de contacto: prepara el mensaje, no guarda nada ------- */
+  // Los botones son enlaces reales (wa.me / mailto) cuyo destino se actualiza al escribir.
   const form = $('[data-contact-form]');
   if (form) {
     const select = $('#interes', form);
+    const nameInput = $('#nombre', form);
+    const goalInput = $('#objetivo', form);
     const status = $('[data-form-status]', form);
+    const links = $$('[data-via]', form);
+
+    const buildMessage = () => {
+      const name = nameInput.value.trim();
+      const goal = goalInput.value.trim();
+      const lines = [name ? `Hola Arnau, soy ${name}.` : 'Hola Arnau.', INTEREST_TEXT[select.value]];
+      if (goal) lines.push(`Mi objetivo: ${goal}`);
+      return lines.join('\n');
+    };
+    const sync = () => {
+      const message = encodeURIComponent(buildMessage());
+      links.forEach((link) => {
+        link.href = link.dataset.via === 'email'
+          ? `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Quiero empezar con AB Fitness')}&body=${message}`
+          : `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+      });
+    };
+    form.addEventListener('input', sync);
+    form.addEventListener('change', sync);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    sync();
 
     // Los botones "Quiero este plan" preseleccionan el servicio
     $$('[data-interest]').forEach((link) => {
-      link.addEventListener('click', () => { if (select) select.value = link.dataset.interest; });
+      link.addEventListener('click', () => { select.value = link.dataset.interest; sync(); });
     });
 
-    // Qué botón se ha pulsado (WhatsApp o email)
-    $$('button[data-via]', form).forEach((button) => {
-      button.addEventListener('click', () => { form.dataset.via = button.dataset.via; });
-    });
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      if (!form.reportValidity()) return;
-
-      const data = new FormData(form);
-      const name = String(data.get('name') || '').trim();
-      const goal = String(data.get('goal') || '').trim();
-      const interest = INTEREST_TEXT[select.value] || select.options[select.selectedIndex].text;
-      const lines = [`Hola Arnau, soy ${name}.`, interest];
-      if (goal) lines.push(`Mi objetivo: ${goal}`);
-      const message = lines.join('\n');
-
-      if (form.dataset.via === 'email') {
-        const subject = encodeURIComponent('Quiero empezar con AB Fitness');
-        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${encodeURIComponent(message)}`;
-        status.textContent = 'Abriendo tu aplicación de correo…';
-      } else {
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
-        status.textContent = 'Abriendo WhatsApp con tu mensaje…';
-      }
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (!form.reportValidity()) { event.preventDefault(); return; }
+        sync();
+        status.textContent = link.dataset.via === 'email'
+          ? 'Se abre tu aplicación de correo con el mensaje preparado.'
+          : 'Se abre WhatsApp con tu mensaje preparado.';
+      });
     });
   }
 
