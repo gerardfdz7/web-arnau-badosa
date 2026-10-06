@@ -77,7 +77,7 @@ Cuando tengas el dominio definitivo:
 
 ## Calidad
 
-Lighthouse (local, sin compresión): Accesibilidad 100 · Buenas prácticas 100 · SEO 100 · Rendimiento 96 (móvil) / 100 (escritorio).
+Lighthouse (local, sin compresión): Accesibilidad 100 · Buenas prácticas 100 · SEO 100 · Rendimiento 95 (móvil, red lenta simulada) / 100 (escritorio).
 axe-core: 0 incidencias. Sin desbordes horizontales entre 320 y 1920 px. Respeta `prefers-reduced-motion`.
 
 ## Licencias de terceros
