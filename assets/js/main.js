@@ -129,7 +129,8 @@
   });
 
   /* ---- Formulario de contacto: prepara el mensaje, no guarda nada ------- */
-  // Los botones son enlaces reales (wa.me / mailto) cuyo destino se actualiza al escribir.
+  // Los botones son enlaces reales (wa.me / mailto) cuyo destino se actualiza al escribir;
+  // por eso no hay <form>: no se envía nada, solo se prepara el mensaje.
   const form = $('[data-contact-form]');
   if (form) {
     const select = $('#interes', form);
@@ -155,7 +156,6 @@
     };
     form.addEventListener('input', sync);
     form.addEventListener('change', sync);
-    form.addEventListener('submit', (event) => event.preventDefault());
     sync();
 
     // Los botones "Quiero este plan" preseleccionan el servicio
@@ -165,7 +165,7 @@
 
     links.forEach((link) => {
       link.addEventListener('click', (event) => {
-        if (!form.reportValidity()) { event.preventDefault(); return; }
+        if (!nameInput.reportValidity()) { event.preventDefault(); return; }
         sync();
         status.textContent = link.dataset.via === 'email'
           ? 'Se abre tu aplicación de correo con el mensaje preparado.'

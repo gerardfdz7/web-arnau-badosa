@@ -561,10 +561,10 @@
           </div>
 
           <div class="form-card reveal">
-            <h3 class="form-card__title">Cuéntame qué buscas</h3>
+            <h3 class="form-card__title" id="form-title">Cuéntame qué buscas</h3>
             <p class="form-card__text">Rellena estos datos y se abrirá tu WhatsApp (o tu correo) con el mensaje ya preparado. Esta web no guarda ningún dato.</p>
 
-            <form class="form" data-contact-form novalidate>
+            <div class="form" role="group" aria-labelledby="form-title" data-contact-form>
               <div class="field">
                 <label for="nombre">Tu nombre</label>
                 <input class="input" id="nombre" name="name" type="text" autocomplete="given-name" placeholder="Nombre" required minlength="2">
@@ -588,7 +588,7 @@
                 <a class="btn btn--ghost" data-via="email" href="mailto:arnaubadosa@gmail.com"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Por email</a>
               </div>
               <p class="form__status" role="status" data-form-status></p>
-            </form>
+            </div>
 
             <div class="form-card__alt">
               <p>¿Prefieres inscribirte directamente?</p>
